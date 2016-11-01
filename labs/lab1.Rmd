@@ -1,0 +1,43 @@
+---
+title: "Lab1"
+author: "Shicheng Huang"
+date: "September 2, 2016"
+output: pdf_document
+---
+
+Lab Information:
+GSI: Jason Wu
+Times: 9 - 11, 10 - 1
+OH: ?
+Email: wjasonu@berkeley.edu
+([Stat153] in subject)  
+
+```{r}
+set.seed(200)
+#generating 100 iid standard normal
+wn <- rnorm(n=100, mean = 0, sd=1) 
+ma <- filter(wn, sides = 2, rep(1/3, 3))
+
+par(mfrow = c(1, 3))
+plot.ts(wn, main = "White Noise",ylim = c(-2, 2))
+plot.ts(ma, main = "Moing Average", ylim = c(-2, 2))
+
+#adding moving average along with the white noise plot
+plot.ts(wn, main = "White Noise", ylim = c(-2, 2))
+lines(ma, col = "red")
+
+#plotting the acf function for both unfiltered and the filtered white Noise Data
+par(mfrow = c(1, 2))
+acf(wn)
+acf(na.omit(ma))
+
+wd <- wn + 0.05
+#the vector represents adding 0.05 at each time jump
+plot.ts(cumsum(wd),  ylim = c(-10, 10))
+lines(cumsum(wn), col = "red")
+```
+
+Analyzing real data
+```{r}
+library(quantmod)
+```

@@ -1,0 +1,19 @@
+---
+title: "RCommandSheets"
+author: "Shicheng Huang"
+date: "September 2, 2016"
+output: pdf_document
+---
+
+Commands for clearing work
+```
+rm(list=ls())
+```
+Commands for diviing plots
+```
+#numRow, numCol are variables
+par(mfrow=c(numRow, numCol))
+```
+List of Commands to document:
+filter  
+cumsum

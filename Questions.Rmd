@@ -1,0 +1,7 @@
+---
+title: "Questions"
+author: "Shicheng Huang"
+date: "September 2, 2016"
+output: pdf_document
+---
+1. How does the acf function in R calculate the autocorrelation based on the data vector?  

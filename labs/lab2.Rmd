@@ -1,0 +1,20 @@
+---
+title: "Lab2"
+author: "Shicheng Huang"
+date: "September 9, 2016"
+output: pdf_document
+---
+```{r}
+par(mfrow = c(1, 2))
+ma1 = arima.sim(list(order=c(0,0,1), ma = 0.9), n = 1000)
+plot(ma1)
+acf(ma1)
+
+ma2 = arima.sim(list(order=c(0,0,1), ma = 1/0.9), n = 1000)
+plot(ma2)
+acf(ma2)
+
+ar1 = arima.sim(list(order=c(1,0,0), ar = 1.1), n = 1000)
+plot(ar1)
+acf(ar1)
+```

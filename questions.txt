@@ -1,0 +1,2 @@
+1.what is a seasonable function
+2.where should i put my set.seed
