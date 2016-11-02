@@ -2,16 +2,15 @@
 title: "stat153hw"
 author: "Shicheng Huang"
 date: "October 29, 2016"
-header-includes:
-   - \usepackage{amsmath}
-output: pdf_document
+output: html_document
+header-includes: \usepackage{amsmath}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 #import libabaries, datasets, and utility functions from R file
-#setwd("./stat153")
+setwd("./stat153")
 source("stat153hw.R")
 ```
 
@@ -132,8 +131,12 @@ ARMA parameters correspond to a non-causal process.
 
 (c) If a process is weakly stationary and gaussian, then it is strongly stationary. 
 False.
+This is because a multivariate Gaussian distribution is fully characterized by its first two moments.  
+
 (d) For every stationary process, the partial autocorrelation at lag h is always less than or equal  
 to the autocorrelation at lag h.  
+By definition, the partial autocorrelation at lag h is after we subtract the linear dependence between $X_h$ and $X$(we are making them less dependent), so partial autocorrelation is always smaller.
 
 (e) The exponential smoothing method for forecasting does not require any specification of  
 tuning parameters.  
+No we have to tune the weight between past forecast and actual values at time t. 
