@@ -91,10 +91,25 @@ As we can see our estimated model could be simplied as a MA(1) model with parame
 ## Q6
 a, MA(7): No, Because the autocorrelation is not decreasing from lag1 to 7, instead, it cuts off starting from lag2 but spikes at lag5, 6 and 7.  
 b, MA(1) with period of 6: No, the pacf doesn't tails off before lag6. 
-c, MA(1) with differencing 1, period 6. I think it is reasonable. I think it needs differencing because the pacf is too high
-from lag1 to lag5
+c, MA(1) with differencing 1, period 6. I think it is reasonable. I think it needs differencing because the pacf is too high from lag1 to lag5 and the absolute value is declining along the lags.
 
 ## Q7
+let $X_t$ denote the original time series data, ${}_{s}X_{t}$ as the time series after differencing $X_t$ by period of 12. $Y_t$ the time series after differencing ${}_{s}X_t$ by lag 1.  
+$$
+\begin{aligned}
+Y_t &= {}_{s}X_t - {}_{s}X_{t - 1} \\
+    &= X_t - X_{t-12} - (X_t - X_{t-12-1}) \\
+    &= X_t - X_{t-12} - X_{t-1} + X_{t-13}
+\end{aligned}
+$$
+thus by applying shifting the equation forward and solve for $X_{t+1}$ we have
+$$
+\begin{aligned}
+X_{t+1} &= X_{t} + X_{t-11} - X_{t-12} + \hat{Y_{t}} \\
+        &= 381.62 + 382.36 - 382.44 + -1.168874 \\
+        &\approx 380.37
+\end{aligned}
+$$
 
 ## Q8 
 (a) The first model is a random walk, so it is expected to be wondering about 0, much higher flucutations(change of ups and downs);Because $X_t$ is linearly dependent on t, and a 0-mean noise variable at time t, the second model will look like a straight line or cluster like a straight line.  
@@ -126,17 +141,19 @@ Determine whether each of the following statements is true or false. Provide rea
 You will not be awarded points if no reason is provided  
 (a) The sample autocorrelations of data coming from a white noise process can themselves be
 treated as white noise.  
+**T.Because the sample autocorrelations are bounded by 1 and -1 with expectations 0 because white noise are indepedent by definition.** 
+
 (b) The correlations outputed by the ARMAacf function in R can be larger than one if the
-ARMA parameters correspond to a non-causal process. 
+ARMA parameters correspond to a non-causal process.  
+**T.Because the function assumes $\sum_{j=0}^{\infty}\psi_j < \infty$, then the theoretical acf bounds by [1, 1]. Non-causal process doesn't statisfy this condition so the acf($\frac{\sum_{j=0}^{\infty}\psi_j\psi_{j+h}}{\sum_{j=0}^{\infty}\psi_j}$) is greater than one for some h.**
 
 (c) If a process is weakly stationary and gaussian, then it is strongly stationary. 
-False.
-This is because a multivariate Gaussian distribution is fully characterized by its first two moments.  
+**False.This is because a multivariate Gaussian distribution is fully characterized by its first two moments.**  
 
 (d) For every stationary process, the partial autocorrelation at lag h is always less than or equal  
 to the autocorrelation at lag h.  
-By definition, the partial autocorrelation at lag h is after we subtract the linear dependence between $X_h$ and $X$(we are making them less dependent), so partial autocorrelation is always smaller.
+**By definition, the partial autocorrelation at lag h is after we subtract the linear dependence between $X_h$ and $X$(we are making them less dependent), so partial autocorrelation is always smaller.**
 
 (e) The exponential smoothing method for forecasting does not require any specification of  
 tuning parameters.  
-No we have to tune the weight between past forecast and actual values at time t. 
+**No we have to tune the weight between past forecast and actual values at time t.** 
