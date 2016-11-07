@@ -14,7 +14,7 @@ estimate_phi <- function(data) {
 
 sim_phi <- function(phi, n){
   #create 10000 estimated phi based on simulated ar1 sample of parameter @phi, size @n
-  allphis <- replicate(100, estimate_phi(ar1_sim(phi, n)))
+  allphis <- replicate(10000, estimate_phi(ar1_sim(phi, n)))
   se_estimated <- round(var(allphis), 4)
   se_theoretical <- (1-phi^2)/n
   cat("Theoretical Sample Distribution\n")
@@ -44,26 +44,4 @@ sim_theta <- function(ta1, ta2, n) {
   cat("The theoretical covariance between theta1 and theta2 are", cov_theoretical[2], "\n")
   cat("The estimated covariance between theta1 and theta2 are", cov_estimated[2], "\n\n")
 }
-# ##Q3t#
-# data("LakeHuron")
-# lmod <- lm(LakeHuron~time(LakeHuron))
-# plot(lmod)
-# res_mod <- arima(x = lmod$residuals, order = c(1, 0, 0))
-# res_pred <- predict(res_mod, n.ahead = 30)$pred
-# 
-# #predict(ar1mod, n.ahead=30)
-# Huron2 = data.frame(x=time(LakeHuron), y = LakeHuron)
-# lmode2 = lm(y~x, data = Huron2)
-# plot(predict(lmode2, n.ahead = 30)$pred + res_pred)
-# plot(LakeHuron)
-# #adding the predictions of the residuals to the original data
 
-##Q4
-#yes, for the pacf, it cuts off after lag2
-#use yw estimation 
-
-##Q6
-
-##Q7
-#co2[length(co2) - 11] + co2[length(co2)] - co2[length(co2) - 12] + -1.168874
-#[1] 364.0211

@@ -2,7 +2,7 @@
 title: "stat153hw"
 author: "Shicheng Huang"
 date: "October 29, 2016"
-output: html_document
+output: pdf_document
 header-includes: \usepackage{amsmath}
 ---
 
@@ -10,7 +10,7 @@ header-includes: \usepackage{amsmath}
 knitr::opts_chunk$set(echo = TRUE)
 
 #import libabaries, datasets, and utility functions from R file
-setwd("./stat153")
+#setwd("./stat153")
 source("stat153hw.R")
 ```
 
@@ -21,7 +21,7 @@ phis <- c(0.2, 0.6, 0.95)
 sample_sizes <- c(20, 60, 100)
 for (phi in phis) {
   for (n in sample_sizes) {
-    #sim_phi(phi, n)
+    sim_phi(phi, n)
   }
 }
 ## update to graphical representation later
@@ -31,11 +31,12 @@ The sample variance has been pretty accurate for 0.2 and 0.6 regardless of sampl
 
 ## Q2
 ```{r Q2, warning=-1}
+set.seed(2)
 thetas <- list(first = c(1.5, 0.75), second = c(0.95, 0))
 for (i in 1:length(thetas)) {
   for (n in sample_sizes){
     temp_theta = thetas[[i]]
-    #sim_theta(temp_theta[1], temp_theta[2], n)
+    sim_theta(temp_theta[1], temp_theta[2], n)
   }
 }
 ```
@@ -60,17 +61,19 @@ for (i in 2:30) {
 }
 # (d) Compare your predictions with those obtained by the predict function.
 res_pred2 <- predict(res_mod, n.ahead = 30)$pred
-res_pred1 == res_pred1
-# they are the same.
+res_pred1 == res_pred2
+```
+Although numerically res_pred1 and res_pred2 are the same but R has some "weird" way of comparing "numbers" so not all the values are the "same" in R.
 
+```{r}
 # (e) Obtain predictions for the original data for the future m = 30 time points.
 linear_pred <- lmod$coefficients[1] + lmod$coefficients[2] * (1973 : 2002)
 data_pred <- linear_pred + res_pred1
+plot(data_pred)
 ```
 
 ## Q4
-(a) Is it a good idea to fit the AR(2) model to this dataset? Why or why not?  
-Yes, because the pacf cuts off(within confidence interval) at lag2.  
+(a) Yes, because the pacf cuts off(within confidence interval) at lag2.  
 
 (b) -0.6. Since the pacf with lag2 is approximately -0.6 from the graph. And pacf lag(n) is cofficient for ar(p) model.
 
@@ -105,36 +108,61 @@ $$
 thus by applying shifting the equation forward and solve for $X_{t+1}$ we have
 $$
 \begin{aligned}
-X_{t+1} &= X_{t} + X_{t-11} - X_{t-12} + \hat{Y_{t}} \\
-        &= 381.62 + 382.36 - 382.44 + -1.168874 \\
-        &\approx 380.37
+X_{t+1} &= X_{t} + X_{t-11} - X_{t-12} + \hat{Y_{t+1}} \\
+        &= 381.62 + 382.44 - 379.00 + (-1.168874) \\
+        &\approx 382.90
 \end{aligned}
 $$
 
 ## Q8 
-(a) The first model is a random walk, so it is expected to be wondering about 0, much higher flucutations(change of ups and downs);Because $X_t$ is linearly dependent on t, and a 0-mean noise variable at time t, the second model will look like a straight line or cluster like a straight line.  
+(a) Dataset two is the first model, also a random walk, because the model is expected to be wondering about 0, much higher variance across time(change of ups and downs);Dataset one is the second model: because $X_t$ is linearly dependent on t, and a 0-mean noise variable at time t, the second model will look like a straight line or close to a straight line.  
 
 (b) No. the variance of $X_t$ is the sum of t i.i.d random noise, $t\sigma_{z}$, so it is not independent of time.  
-?(c) $X_n$, the conditioned(knowing all the past values) random walk is a martingale.  
+
+(c) 
+$$
+\begin{aligned}
+X_{t+1} &= \delta X_{t+1} + X_t \\
+        &= Z_{t+1} + X_t \\
+\end{aligned}
+$$
+So predicting a random walk is like predicting the next value of a white noise process, given the present value. Therefore the best one step forecast should be the avg value of the white noise process, which is 0, plus the present value $X_t$, then we get $X_t$; we can also arrive at the same conclude by realizing a random walk is a martingale process.
 
 ## Q9
-(a)  
-(b)  
-(c)  
-(d)  
-(e)  
+(a)  $\phi(z) = 1$ and $\theta(z) = 1 + \frac{1}{2}z$  
+Because the acf cuts off at 1, I model it with MA(1) model. get the cofficient of $\theta_1 using$ $acf(1) = \frac{\theta_1^2}{1-\theta_1^2} = 0.4$.  
+(b)  $\phi(z) = 1$ and $\theta(z) = 1 + \frac{z^3}{2}$  
+Because the acf only high at 3(besides 0), and not 2, I mode it with MA(1) with period d.  
+(c)  $\phi(z) = 1 + 0.5z$ and $\theta(z) = 1$  
+Modeling it with AR(1) because for AR(1) $\frac{\rho_X(h + 1)}{\rho_X(h)} = \frac{\phi^{h+1}}{phi^h} = \phi$  
+(d)  $\phi(z) = 1 + 0.5z$ annd $\theta(z) = 0.3$  
+Modeling it with ARMA(1, 1) because the AR(1) compoment makes the fraction between $\rho(h+1)$ and $\rho(h)$ equals to $\rho$ and the MA(1) makes $\rho_X(1) \neq 0.5$  
+(e)  $X_t = W_t + 0.5W_{t-12}$. To create a "fake"-seasonal behavior I use the MA(12) models with cofficients 0 for lag 1 to 11. It is stationary because $E[X_t] = 0$. Variance and covariance are just variance of noises and depends only on the period and lag.
 
 ## Q10
 (a) Show that $X_t = Y_t - Y_{t-d}$ is a stationary process  
 $$
 \begin{aligned}
 X_t &= Y_t - Y_{t-d} \\
-    &= s_t + Z_t - s_{t-d} - Z_{t - d - 1} \\
+    &= s_t + Z_t - s_{t-d} - Z_{t-d-1} \\
+    &= s_t - s_{t-d} + Z_t - Z_{t -d-1} \\
+    &= Z_t - Z_{t-d-1}
 \end{aligned}
 $$
-(b) Show that the best linear predictor for $X_{nd + 1} in terms of {X_1, X_2,...X_{nd-1}, X_{nd}}$ equals  
-$\fract{-X_1 - 2X_{1+d} - 3X_{1+2d}-...-nX_{1+(n-1)d}}{n+1}$  
-??(c) Find the partial autocorrelation function of ${X_t}$  
+It is stationary bc its expectation is 0 and variance $\sigma_Z^2$. The autocovariance check see section (c).  
+
+(b) Show that the best linear predictor for $X_{nd + 1}$ in terms of ${X_1, X_2,...X_{nd-1}, X_{nd}}$ equals  
+$\frac{-X_1 - 2X_{1+d} - 3X_{1+2d}-...-nX_{1+(n-1)d}}{n+1}$  
+** EC omitted**
+
+(c) Find the partial autocorrelation function of ${X_t}$    
+Since $X_t = Z_t - Z_{t-d}$, $X_t$ could be regarded as an $MA(1)_d$ process. So the pacf for non-period lags should be 0, and the lags that are divisible by period d should sort of follow the pacf of an MA(1) process, defined as $-\frac{(-\theta)^h}{1+\theta^2 + ... \theta^{2h}}$. Since through simulation I know all periodic cofficients should be negative, therefore that previous formua could be motified as $-\frac{1}{1+\theta^2 + ... \theta^{2h}} = -\frac{1}{1 + h}$
+$$
+\phi_{hh} = \begin{cases}
+-\frac{1}{1 + m} \quad \text when \; md = h, m \in \mathbb{N}\\
+0 \quad \text when \; md = h, m \notin \mathbb{N}\\
+\end{cases}
+$$
 
 ## Q11
 Determine whether each of the following statements is true or false. Provide reasons in each case.
